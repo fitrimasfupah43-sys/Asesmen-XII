@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ekspedisi Limit · Asesmen Diagnostik Limit Fungsi Aljabar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --paper:#F6F3EA;
+    --grid:#CFD9E6;
+    --ink:#1B2A4A;
+    --ink-soft:#4B5A78;
+    --teal:#2F6F62;
+    --teal-soft:#E4EFE9;
+    --amber:#C97A2B;
+    --amber-soft:#F6E6D2;
+    --brick:#AE4A2E;
+    --brick-soft:#F5E1DA;
+    --card:#FFFFFF;
+    --line:#1B2A4A;
+    --radius:14px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  body{
+    margin:0;
+    background-color:var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:28px 28px;
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+  }
+
+  .wrap{max-width:840px; margin:0 auto; padding:28px 20px 80px;}
+
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:600; margin:0 0 8px;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--card);
+    border:2px solid var(--line);
+    border-radius:var(--radius);
+    padding:26px 24px 22px;
+    margin-bottom:22px;
+    box-shadow:6px 6px 0 var(--grid);
+  }
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    margin-bottom:6px;
+  }
+  .hero h1{font-size:26px; line-height:1.25;}
+  .hero p.lede{color:var(--ink-soft); font-size:15px; max-width:60ch; margin-top:6px;}
+
+  .demo-box{
+    margin-top:20px;
+    border-top:1.5px dashed var(--grid);
+    padding-top:18px;
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:18px;
+    align-items:start;
+  }
+  @media (max-width:640px){ .demo-box{grid-template-columns:1fr;} }
+
+  .demo-box svg{width:100%; height:auto; display:block; background:var(--paper); border:1.5px solid var(--grid); border-radius:8px;}
+
+  .demo-readout{
+    background:var(--paper);
+    border:1.5px solid var(--grid);
+    border-radius:8px;
+    padding:14px 16px;
+    font-size:14px;
+  }
+  .demo-readout .row{display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px dotted var(--grid);}
+  .demo-readout .row:last-of-type{border-bottom:none;}
+  .demo-readout .val{font-family:'IBM Plex Mono', monospace; font-weight:600;}
+  .demo-note{margin-top:10px; font-size:13.5px; color:var(--ink-soft);}
+
+  input[type="range"]{
+    width:100%;
+    margin-top:10px;
+    accent-color:var(--amber);
+  }
+  .demo-slider-label{display:flex; justify-content:space-between; font-size:12px; color:var(--ink-soft); font-family:'IBM Plex Mono', monospace;}
+
+  /* ---------- INSTRUCTIONS ---------- */
+  .card{
+    background:var(--card);
+    border:2px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 24px;
+    margin-bottom:22px;
+  }
+  .card ul{margin:10px 0 0; padding-left:20px;}
+  .card li{margin-bottom:6px;}
+
+  label.field-label{display:block; font-size:13px; font-weight:600; color:var(--ink-soft); margin:14px 0 5px; text-transform:uppercase; letter-spacing:0.04em;}
+  input[type="text"]{
+    width:100%;
+    padding:10px 12px;
+    border:1.5px solid var(--grid);
+    border-radius:8px;
+    font-size:15px;
+    font-family:'IBM Plex Sans', sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  input[type="text"]:focus, textarea:focus, button:focus-visible{
+    outline:3px solid var(--amber);
+    outline-offset:1px;
+  }
+
+  /* ---------- PROGRESS ---------- */
+  .progress-shell{
+    position:sticky; top:0; z-index:5;
+    background:var(--paper);
+    padding:10px 0 14px;
+  }
+  .progress-track{
+    height:10px; background:#fff; border:1.5px solid var(--line); border-radius:6px; overflow:hidden;
+  }
+  .progress-fill{
+    height:100%; width:0%; background:var(--teal); transition:width .35s ease;
+  }
+  .progress-text{font-family:'IBM Plex Mono', monospace; font-size:12px; margin-top:6px; color:var(--ink-soft);}
+
+  /* ---------- POS SECTIONS ---------- */
+  .pos-section{margin-bottom:26px;}
+  .pos-head{
+    display:flex; align-items:baseline; gap:10px; margin-bottom:6px;
+  }
+  .pos-num{
+    font-family:'IBM Plex Mono', monospace;
+    background:var(--ink);
+    color:var(--paper);
+    padding:2px 10px;
+    border-radius:20px;
+    font-size:13px;
+  }
+  .pos-head h2{font-size:20px;}
+  .pos-desc{color:var(--ink-soft); font-size:14px; margin-bottom:14px;}
+
+  .qcard{
+    background:var(--card);
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:18px 18px;
+    margin-bottom:14px;
+  }
+  .qcard .prompt{font-size:15.5px; margin-bottom:12px;}
+  .qcard .prompt .expr{font-family:'IBM Plex Mono', monospace; background:var(--paper); padding:1px 6px; border-radius:4px;}
+
+  .opt-grid{display:grid; gap:8px;}
+  .opt-btn{
+    text-align:left;
+    padding:10px 14px;
+    border:1.5px solid var(--grid);
+    background:var(--paper);
+    border-radius:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14.5px;
+    color:var(--ink);
+    cursor:pointer;
+    transition:border-color .15s, background .15s;
+  }
+  .opt-btn:hover{border-color:var(--ink-soft);}
+  .opt-btn.selected{border-color:var(--amber); background:var(--amber-soft);}
+  .opt-btn.correct-answer{border-color:var(--teal); background:var(--teal-soft); font-weight:600;}
+  .opt-btn.wrong-answer{border-color:var(--brick); background:var(--brick-soft);}
+  .opt-btn.locked{cursor:default;}
+
+  .bool-row{display:flex; gap:10px;}
+  .bool-row .opt-btn{flex:1; text-align:center; font-family:'IBM Plex Sans', sans-serif; font-weight:600;}
+
+  textarea{
+    width:100%; min-height:64px; margin-top:10px;
+    border:1.5px solid var(--grid); border-radius:8px;
+    padding:10px 12px; font-family:'IBM Plex Sans', sans-serif; font-size:14px;
+    background:var(--paper); color:var(--ink); resize:vertical;
+  }
+  .reason-label{font-size:12.5px; color:var(--ink-soft); margin-top:10px; display:block;}
+
+  .btn{
+    display:inline-block;
+    margin-top:12px;
+    padding:9px 18px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    border-radius:8px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+  }
+  .btn:hover{background:var(--teal);}
+  .btn.secondary{background:transparent; color:var(--ink); border:1.5px solid var(--line);}
+  .btn.secondary:hover{background:var(--paper);}
+  .btn:disabled{opacity:0.45; cursor:not-allowed;}
+
+  .feedback{
+    margin-top:12px; padding:12px 14px; border-radius:8px; font-size:14px; display:none;
+  }
+  .feedback.show{display:block;}
+  .feedback.correct{background:var(--teal-soft); border:1px solid var(--teal); color:#1E4A40;}
+  .feedback.incorrect{background:var(--brick-soft); border:1px solid var(--brick); color:#7A3320;}
+  .feedback .tag{font-weight:700; font-family:'IBM Plex Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:.05em; display:block; margin-bottom:4px;}
+
+  /* ---------- RESULTS ---------- */
+  .basecamp{
+    background:var(--ink);
+    color:var(--paper);
+    border-radius:var(--radius);
+    padding:26px 24px;
+  }
+  .basecamp h2{color:#fff;}
+  .diag-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 0; border-bottom:1px solid rgba(246,243,234,0.18);
+    font-size:14.5px;
+  }
+  .diag-row:last-of-type{border-bottom:none;}
+  .level-pill{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; padding:3px 10px; border-radius:20px;
+  }
+  .level-mahir{background:#3E8B7A; color:#fff;}
+  .level-cukup{background:var(--amber); color:#fff;}
+  .level-bimbingan{background:var(--brick); color:#fff;}
+  .level-belum{background:#5b6a86; color:#fff;}
+
+  .rekom{background:rgba(246,243,234,0.08); border:1px dashed rgba(246,243,234,0.35); border-radius:8px; padding:14px 16px; margin-top:16px; font-size:14px;}
+  .rekom ul{margin:8px 0 0; padding-left:18px;}
+
+  #copyStatus{font-size:13px; margin-top:8px; color:var(--amber-soft); font-family:'IBM Plex Mono', monospace;}
+  .name-warning{color:#ffd7c7; font-size:13px; margin-top:8px; display:none;}
+  .name-warning.show{display:block;}
+
+  footer{text-align:center; font-size:12.5px; color:var(--ink-soft); margin-top:26px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO + LIVE DEMO -->
+  <div class="hero">
+    <div class="eyebrow">Sebelum mendaki</div>
+    <h1>Apa sebenarnya arti "mendekati"?</h1>
+    <p class="lede">Geser penanda di bawah ini. Perhatikan apa yang terjadi pada nilai <span class="mono">f(x)</span> saat <span class="mono">x</span> semakin dekat ke 2 — baik dari kiri maupun kanan — walau di titik <span class="mono">x = 2</span> sendiri fungsinya "berlubang".</p>
+
+    <div class="demo-box">
+      <div>
+        <svg id="demoSvg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" aria-label="Grafik fungsi mendekati titik x=2">
+          <!-- axes -->
+          <line x1="40" y1="20" x2="40" y2="260" stroke="#1B2A4A" stroke-width="1.5"/>
+          <line x1="40" y1="260" x2="380" y2="260" stroke="#1B2A4A" stroke-width="1.5"/>
+          <!-- function line (two segments, gap at x=2) -->
+          <line x1="56" y1="230" x2="196" y2="110" stroke="#2F6F62" stroke-width="2.5"/>
+          <line x1="204" y1="102" x2="356" y2="20" stroke="#2F6F62" stroke-width="2.5"/>
+          <!-- open point at (2,4) -->
+          <circle cx="200" cy="106" r="6" fill="#F6F3EA" stroke="#1B2A4A" stroke-width="2"/>
+          <text x="206" y="98" font-size="11" font-family="IBM Plex Mono" fill="#4B5A78">(2, 4) tak terdefinisi</text>
+          <!-- moving point -->
+          <circle id="movingDot" cx="56" cy="230" r="7" fill="#C97A2B"/>
+          <text x="42" y="278" font-size="11" font-family="IBM Plex Mono" fill="#4B5A78">x</text>
+          <text x="20" y="26" font-size="11" font-family="IBM Plex Mono" fill="#4B5A78">f(x)</text>
+        </svg>
+      </div>
+      <div class="demo-readout">
+        <div class="row"><span>x saat ini</span><span class="val" id="readX">1.60</span></div>
+        <div class="row"><span>f(x) = (x²−4)/(x−2)</span><span class="val" id="readFx">3.60</span></div>
+        <div class="row"><span>sisi pendekatan</span><span class="val" id="readSide">kiri</span></div>
+        <div class="row"><span>jarak ke 2, |x−2|</span><span class="val" id="readDist">0.40</span></div>
+        <input type="range" id="demoSlider" min="-100" max="100" step="1" value="-40">
+        <div class="demo-slider-label"><span>x = 1.00</span><span>x = 2 (berlubang)</span><span>x = 3.00</span></div>
+        <p class="demo-note" id="demoNote">Semakin kamu geser mendekati tengah, f(x) semakin dekat ke <strong>4</strong> — walau x = 2 sendiri tidak pernah benar-benar bisa dimasukkan.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSTRUCTIONS -->
+  <div class="card">
+    <h2>Sebelum berangkat</h2>
+    <p>Ini <strong>asesmen diagnostik</strong>, bukan ulangan. Tujuannya untuk memetakan sejauh mana pemahamanmu tentang limit fungsi aljabar <em>sebelum</em> materi ini dibahas lebih dalam di kelas — jadi tidak ada nilai yang dicatat sebagai skor akhir.</p>
+    <ul>
+      <li>Kerjakan sendiri, tanpa mencari jawaban di internet atau bertanya ke teman — hasil yang jujur jauh lebih berguna daripada hasil yang sempurna.</li>
+      <li>Setiap soal langsung memberi umpan balik begitu kamu memeriksa jawabannya, lengkap dengan penjelasannya.</li>
+      <li>Estimasi waktu: 30–45 menit untuk 6 pos.</li>
+      <li>Di akhir, kamu akan sampai di "Basecamp" — ringkasan hasil yang bisa kamu salin dan kirim ke gurumu.</li>
+    </ul>
+    <label class="field-label" for="studentName">Nama</label>
+    <input type="text" id="studentName" placeholder="Tulis namamu di sini">
+    <label class="field-label" for="studentClass">Kelas</label>
+    <input type="text" id="studentClass" placeholder="Contoh: XII-4">
+  </div>
+
+  <div class="progress-shell">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0 dari 14 pos terlewati</div>
+  </div>
+
+  <div id="questionMount"></div>
+
+  <!-- RESULTS -->
+  <div class="basecamp card" id="basecamp">
+    <div class="eyebrow" style="color:#E4C79A;">Basecamp</div>
+    <h2>Ringkasan hasil ekspedisimu</h2>
+    <p id="incompleteNotice" style="font-size:14px; color:#F0C9B6;"></p>
+    <div id="diagList"></div>
+    <div class="rekom" id="rekomBox"></div>
+    <button class="btn" id="revealBtn" style="background:#C97A2B;">Buka Ringkasan</button>
+    <div class="name-warning" id="nameWarning">Isi dulu nama dan kelasmu di bagian atas ya, supaya ringkasan ini bisa dikenali gurumu.</div>
+    <div id="reportSection" style="display:none; margin-top:16px;">
+      <button class="btn secondary" id="copyBtn" style="border-color:#F6F3EA; color:#F6F3EA;">Salin Ringkasan ke Papan Klip</button>
+      <div id="copyStatus"></div>
+    </div>
+  </div>
+
+  <footer>Asesmen Diagnostik · Limit Fungsi Aljabar · Matematika Tingkat Lanjut Kelas XII</footer>
+</div>
+
+<script>
+// ---------------- LIVE HERO DEMO ----------------
+const slider = document.getElementById('demoSlider');
+const dot = document.getElementById('movingDot');
+const readX = document.getElementById('readX');
+const readFx = document.getElementById('readFx');
+const readSide = document.getElementById('readSide');
+const readDist = document.getElementById('readDist');
+const demoNote = document.getElementById('demoNote');
+
+function mapX(x){ return 40 + (x/4)*320; }
+function mapY(y){ return 260 - (y/8)*240; }
+
+function updateDemo(){
+  const offset = parseInt(slider.value,10)/100; // -1 .. 1
+  const x = 2 + offset;
+  readX.textContent = x.toFixed(2);
+  readSide.textContent = offset < 0 ? 'kiri' : (offset > 0 ? 'kanan' : 'tepat di 2');
+  readDist.textContent = Math.abs(offset).toFixed(2);
+
+  if(Math.abs(offset) < 0.005){
+    readFx.textContent = '0/0 (tak terdefinisi)';
+    dot.setAttribute('opacity','0');
+    demoNote.innerHTML = 'Di titik ini <strong>x = 2</strong>, rumusnya menjadi 0/0 — tidak terdefinisi. Tapi lihat: dari kedua sisi, nilainya tetap menuju satu angka yang sama.';
+  } else {
+    const fx = (x*x - 4)/(x - 2);
+    readFx.textContent = fx.toFixed(3);
+    dot.setAttribute('opacity','1');
+    dot.setAttribute('cx', mapX(x));
+    dot.setAttribute('cy', mapY(fx));
+    demoNote.innerHTML = 'Semakin kamu geser mendekati tengah, f(x) semakin dekat ke <strong>4</strong> — walau x = 2 sendiri tidak pernah benar-benar bisa dimasukkan.';
+  }
+}
+slider.addEventListener('input', updateDemo);
+updateDemo();
+
+// ---------------- QUESTION DATA ----------------
+const posInfo = {
+  1:{title:'Konsep Intuitif', desc:'Membaca kecenderungan nilai fungsi tanpa harus menyentuh titik itu sendiri.'},
+  2:{title:'Substitusi Langsung', desc:'Jalur paling landai: berlaku ketika fungsi memang kontinu di titik tersebut.'},
+  3:{title:'Bentuk Tak Tentu 0/0 — Pemfaktoran', desc:'Saat jalur utama terhalang (0/0), cari jalur alternatif lewat pemfaktoran.'},
+  4:{title:'Bentuk Tak Tentu 0/0 — Merasionalkan', desc:'Medan berbatu berbentuk akar butuh trik lain: mengalikan dengan sekawan.'},
+  5:{title:'Mendekati Tak Terhingga', desc:'Melihat ke kejauhan: bagaimana fungsi berperilaku saat x membesar tanpa batas.'},
+  6:{title:'Cek Miskonsepsi', desc:'Pos terakhir sebelum basecamp — menguji pemahaman konsep, bukan hitungan.'}
+};
+
+const questions = [
+  {id:'p1q1', pos:1, type:'mcq',
+   prompt:'Diberikan <span class="expr">f(x) = (x² − 4)/(x − 2)</span>. Dari tabel nilai x = 1.9, 1.99, 1.999 dan x = 2.1, 2.01, 2.001, f(x) berturut-turut mendekati 3.9, 3.99, 3.999 dan 4.1, 4.01, 4.001. Nilai yang didekati f(x) saat x → 2 adalah…',
+   options:['0','2','4','Tidak terdefinisi'], correct:2,
+   explain:'Meski f(2) tidak terdefinisi (pembagian oleh nol), nilai f(x) dari kedua sisi sama-sama menuju 4. Itulah nilai limitnya.'},
+  {id:'p1q2', pos:1, type:'mcq',
+   prompt:'Karena secara aljabar f(2) menghasilkan 0/0 (tidak terdefinisi), apakah itu berarti lim<sub>x→2</sub> f(x) juga tidak ada?',
+   options:['Ya, karena f(2) tidak ada maka limitnya juga tidak ada','Tidak, limit tetap bisa ada walau f(2) tidak terdefinisi, karena limit hanya melihat nilai di sekitar titik itu','Ya, karena pembagian oleh nol selalu berarti tak hingga','Tidak, karena limit selalu bernilai nol jika bentuknya 0/0'],
+   correct:1,
+   explain:'Limit hanya peduli pada perilaku fungsi di SEKITAR suatu titik, bukan nilai persis di titik itu. Ini yang membedakan limit dari substitusi biasa.'},
+
+  {id:'p2q1', pos:2, type:'mcq',
+   prompt:'Tentukan <span class="expr">lim<sub>x→3</sub> (2x² + x − 1)</span>',
+   options:['14','17','20','23'], correct:2,
+   explain:'Fungsi polinomial kontinu di semua titik, jadi bisa langsung substitusi: 2(3)² + 3 − 1 = 18 + 3 − 1 = 20.'},
+  {id:'p2q2', pos:2, type:'mcq',
+   prompt:'Tentukan <span class="expr">lim<sub>x→−2</sub> (x³ + 2x² − 5)</span>',
+   options:['−5','−13','3','11'], correct:0,
+   explain:'Substitusi langsung: (−2)³ + 2(−2)² − 5 = −8 + 8 − 5 = −5.'},
+
+  {id:'p3q1', pos:3, type:'mcq',
+   prompt:'Tentukan <span class="expr">lim<sub>x→5</sub> (x² − 25)/(x − 5)</span>',
+   options:['0','5','10','Tidak terdefinisi'], correct:2,
+   explain:'Bentuk 0/0 diselesaikan dengan pemfaktoran: (x−5)(x+5)/(x−5) = x+5, sehingga limitnya = 5+5 = 10.',
+   reasoning:true, reasonLabel:'Tuliskan langkah pemfaktoranmu di sini (tidak dinilai benar/salah, tapi akan dibaca gurumu):'},
+  {id:'p3q2', pos:3, type:'mcq',
+   prompt:'Tentukan <span class="expr">lim<sub>x→−3</sub> (x² + 5x + 6)/(x + 3)</span>',
+   options:['−1','1','3','Tidak terdefinisi'], correct:0,
+   explain:'Faktorkan: (x+2)(x+3)/(x+3) = x+2, maka limitnya = −3+2 = −1.'},
+
+  {id:'p4q1', pos:4, type:'mcq',
+   prompt:'Tentukan <span class="expr">lim<sub>x→0</sub> (√(x+4) − 2)/x</span>',
+   options:['0','1/4','1/2','Tidak terdefinisi'], correct:1,
+   explain:'Kalikan dengan sekawan (√(x+4)+2): pembilang menjadi x, sehingga hasilnya 1/(√(x+4)+2) → 1/(2+2) = 1/4.'},
+  {id:'p4q2', pos:4, type:'mcq',
+   prompt:'Tentukan <span class="expr">lim<sub>x→9</sub> (x − 9)/(√x − 3)</span>',
+   options:['3','6','9','Tidak terdefinisi'], correct:1,
+   explain:'x − 9 = (√x−3)(√x+3), sehingga pecahan menyederhana menjadi √x+3 → 3+3 = 6.'},
+
+  {id:'p5q1', pos:5, type:'mcq',
+   prompt:'Tentukan <span class="expr">lim<sub>x→∞</sub> (3x² + 2x − 1)/(5x² − x + 4)</span>',
+   options:['0','3/5','1','∞'], correct:1,
+   explain:'Derajat pembilang dan penyebut sama (keduanya pangkat 2), jadi limitnya adalah rasio koefisien pangkat tertinggi: 3/5.'},
+  {id:'p5q2', pos:5, type:'mcq',
+   prompt:'Tentukan <span class="expr">lim<sub>x→∞</sub> (2x + 1)/(x² − 3)</span>',
+   options:['0','2','∞','Tidak ada'], correct:0,
+   explain:'Derajat penyebut lebih tinggi dari pembilang, sehingga pecahan makin mengecil menuju 0.'},
+  {id:'p5q3', pos:5, type:'mcq',
+   prompt:'Tentukan kecenderungan <span class="expr">lim<sub>x→∞</sub> (4x³ − 2x)/(2x² + 5)</span>',
+   options:['Menuju 0','Menuju 2 (rasio koefisien pangkat tertinggi)','Menuju tak terhingga (∞), terus membesar','Tidak dapat ditentukan'], correct:2,
+   explain:'Derajat pembilang (3) lebih tinggi dari penyebut (2), sehingga nilai pecahan membesar tanpa batas — limitnya divergen menuju tak terhingga, bukan sebuah bilangan real.'},
+
+  {id:'p6q1', pos:6, type:'bool',
+   statement:'Karena f(2) tidak terdefinisi, maka lim<sub>x→2</sub> f(x) pasti tidak ada.',
+   correct:false,
+   explain:'Salah. Limit hanya bergantung pada nilai di sekitar titik itu, bukan di titik itu sendiri — seperti yang kamu lihat di demo pendakian di atas.',
+   reasoning:true, reasonLabel:'Menurutmu, mengapa pernyataan ini salah/benar? Tulis alasanmu:'},
+  {id:'p6q2', pos:6, type:'bool',
+   statement:'Nilai limit suatu fungsi di suatu titik selalu sama dengan nilai fungsi tepat di titik tersebut.',
+   correct:false,
+   explain:'Salah, kecuali fungsi tersebut kontinu di titik itu. Untuk fungsi yang tidak terdefinisi atau terputus di suatu titik, keduanya bisa berbeda.',
+   reasoning:true, reasonLabel:'Tulis alasanmu:'},
+  {id:'p6q3', pos:6, type:'bool',
+   statement:'Bentuk 0/0 berarti nilai limitnya otomatis 0.',
+   correct:false,
+   explain:'Salah. 0/0 adalah "bentuk tak tentu" — sinyal bahwa fungsi perlu disederhanakan dulu (pemfaktoran/rasionalisasi) sebelum nilai limitnya bisa ditentukan. Hasilnya bisa berupa angka berapa pun, bukan otomatis 0.',
+   reasoning:true, reasonLabel:'Tulis alasanmu:'}
+];
+
+const state = {};
+questions.forEach(q => state[q.id] = {selected:null, checked:false, correct:null, reasoning:''});
+
+// ---------------- RENDER ----------------
+const mount = document.getElementById('questionMount');
+let html = '';
+for(let posNum=1; posNum<=6; posNum++){
+  const info = posInfo[posNum];
+  html += `<section class="pos-section" id="posSection${posNum}">
+    <div class="pos-head"><span class="pos-num">POS ${posNum}</span><h2>${info.title}</h2></div>
+    <p class="pos-desc">${info.desc}</p>`;
+  questions.filter(q => q.pos === posNum).forEach(q => {
+    if(q.type === 'mcq'){
+      html += `<div class="qcard" id="card-${q.id}">
+        <div class="prompt">${q.prompt}</div>
+        <div class="opt-grid">
+          ${q.options.map((opt,i) => `<button class="opt-btn" data-qid="${q.id}" data-idx="${i}" data-kind="mcq">${opt}</button>`).join('')}
+        </div>
+        ${q.reasoning ? `<label class="reason-label">${q.reasonLabel}</label><textarea id="reason-${q.id}" placeholder="Tulis di sini..."></textarea>` : ''}
+        <div><button class="btn" data-check="${q.id}" disabled>Periksa Jawaban</button></div>
+        <div class="feedback" id="feedback-${q.id}"></div>
+      </div>`;
+    } else if(q.type === 'bool'){
+      html += `<div class="qcard" id="card-${q.id}">
+        <div class="prompt">"${q.statement}"</div>
+        <div class="bool-row">
+          <button class="opt-btn" data-qid="${q.id}" data-idx="true" data-kind="bool">Benar</button>
+          <button class="opt-btn" data-qid="${q.id}" data-idx="false" data-kind="bool">Salah</button>
+        </div>
+        ${q.reasoning ? `<label class="reason-label">${q.reasonLabel}</label><textarea id="reason-${q.id}" placeholder="Tulis di sini..."></textarea>` : ''}
+        <div><button class="btn" data-check="${q.id}" disabled>Periksa Jawaban</button></div>
+        <div class="feedback" id="feedback-${q.id}"></div>
+      </div>`;
+    }
+  });
+  html += `</section>`;
+}
+mount.innerHTML = html;
+
+// ---------------- INTERACTIONS ----------------
+document.querySelectorAll('.opt-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const qid = btn.dataset.qid;
+    if(state[qid].checked) return;
+    document.querySelectorAll(`.opt-btn[data-qid="${qid}"]`).forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    const kind = btn.dataset.kind;
+    state[qid].selected = kind === 'bool' ? (btn.dataset.idx === 'true') : parseInt(btn.dataset.idx,10);
+    document.querySelector(`[data-check="${qid}"]`).disabled = false;
+  });
+});
+
+document.querySelectorAll('[data-check]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const qid = btn.dataset.check;
+    const q = questions.find(x => x.id === qid);
+    const s = state[qid];
+    if(s.checked || s.selected === null) return;
+    s.checked = true;
+    s.correct = (s.selected === q.correct);
+    const reasonEl = document.getElementById(`reason-${qid}`);
+    if(reasonEl) s.reasoning = reasonEl.value.trim();
+
+    document.querySelectorAll(`.opt-btn[data-qid="${qid}"]`).forEach(b => {
+      b.classList.add('locked');
+      b.disabled = true;
+      const isCorrectBtn = q.type === 'bool' ? (b.dataset.idx === String(q.correct)) : (parseInt(b.dataset.idx,10) === q.correct);
+      if(isCorrectBtn) b.classList.add('correct-answer');
+      else if(b.classList.contains('selected')) b.classList.add('wrong-answer');
+    });
+
+    const fb = document.getElementById(`feedback-${qid}`);
+    fb.classList.add('show', s.correct ? 'correct' : 'incorrect');
+    fb.innerHTML = `<span class="tag">${s.correct ? 'Tepat' : 'Belum tepat'}</span>${q.explain}`;
+
+    btn.disabled = true;
+    updateProgress();
+  });
+});
+
+function updateProgress(){
+  const total = questions.length;
+  const done = questions.filter(q => state[q.id].checked).length;
+  document.getElementById('progressFill').style.width = (done/total*100) + '%';
+  document.getElementById('progressText').textContent = `${done} dari ${total} pos terlewati`;
+}
+
+// ---------------- RESULTS / BASECAMP ----------------
+function levelFor(ratio, answered){
+  if(answered === 0) return {label:'Belum Dicoba', cls:'level-belum'};
+  if(ratio >= 0.8) return {label:'Mahir', cls:'level-mahir'};
+  if(ratio >= 0.5) return {label:'Cukup', cls:'level-cukup'};
+  return {label:'Perlu Bimbingan', cls:'level-bimbingan'};
+}
+
+document.getElementById('revealBtn').addEventListener('click', () => {
+  const name = document.getElementById('studentName').value.trim();
+  const kelas = document.getElementById('studentClass').value.trim();
+  const warn = document.getElementById('nameWarning');
+  if(!name || !kelas){
+    warn.classList.add('show');
+    return;
+  }
+  warn.classList.remove('show');
+
+  const totalAnswered = questions.filter(q => state[q.id].checked).length;
+  const incompleteNotice = document.getElementById('incompleteNotice');
+  incompleteNotice.textContent = totalAnswered < questions.length
+    ? `Baru ${totalAnswered} dari ${questions.length} soal dikerjakan — hasil di bawah ini dihitung dari yang sudah selesai saja.`
+    : '';
+
+  const diagList = document.getElementById('diagList');
+  let diagHtml = '';
+  const posSummaries = [];
+  const weakPos = [];
+
+  for(let posNum=1; posNum<=6; posNum++){
+    const posQs = questions.filter(q => q.pos === posNum);
+    const answered = posQs.filter(q => state[q.id].checked);
+    const correct = answered.filter(q => state[q.id].correct).length;
+    const ratio = answered.length ? correct/answered.length : 0;
+    const lvl = levelFor(ratio, answered.length);
+    diagHtml += `<div class="diag-row"><span>Pos ${posNum} · ${posInfo[posNum].title}</span><span class="level-pill ${lvl.cls}">${lvl.label} (${correct}/${answered.length})</span></div>`;
+    posSummaries.push(`Pos ${posNum} (${posInfo[posNum].title}): ${lvl.label} — benar ${correct} dari ${answered.length} soal yang dikerjakan.`);
+    if(lvl.label === 'Perlu Bimbingan' || lvl.label === 'Belum Dicoba') weakPos.push(posNum);
+  }
+  diagList.innerHTML = diagHtml;
+
+  const rekomBox = document.getElementById('rekomBox');
+  const rekomMap = {
+    1:'kembali ke konsep dasar limit lewat tabel/grafik pendekatan',
+    2:'latihan substitusi langsung pada fungsi polinomial',
+    3:'latihan pemfaktoran bentuk tak tentu 0/0',
+    4:'latihan merasionalkan bentuk akar pada limit',
+    5:'latihan membandingkan pangkat tertinggi pada limit menuju tak hingga',
+    6:'diskusi ulang miskonsepsi umum seputar limit'
+  };
+  if(weakPos.length === 0){
+    rekomBox.innerHTML = '<strong>Rekomendasi:</strong> Pemahaman awal sudah cukup merata di semua pos. Lanjutkan ke materi berikutnya dengan latihan soal variasi yang lebih menantang.';
+  } else {
+    rekomBox.innerHTML = `<strong>Rekomendasi fokus belajar:</strong><ul>${weakPos.map(p => `<li>Pos ${p}: ${rekomMap[p]}</li>`).join('')}</ul>`;
+  }
+
+  const reasoningLines = questions.filter(q => q.reasoning && state[q.id].reasoning)
+    .map(q => `— (${q.id}) "${state[q.id].reasoning}"`);
+
+  const report = `RINGKASAN ASESMEN DIAGNOSTIK — LIMIT FUNGSI ALJABAR
+Nama: ${name}
+Kelas: ${kelas}
+Soal dikerjakan: ${totalAnswered}/${questions.length}
+
+${posSummaries.join('\n')}
+
+Catatan/alasan tertulis siswa:
+${reasoningLines.length ? reasoningLines.join('\n') : '(tidak ada catatan tertulis)'}
+
+Rekomendasi: ${weakPos.length === 0 ? 'Pemahaman awal merata, lanjut ke materi berikutnya.' : weakPos.map(p => rekomMap[p]).join('; ')}`;
+
+  document.getElementById('reportSection').style.display = 'block';
+  document.getElementById('copyBtn').onclick = () => {
+    navigator.clipboard.writeText(report).then(() => {
+      document.getElementById('copyStatus').textContent = 'Tersalin! Tempelkan (paste) ringkasan ini ke dokumen atau pesan untuk gurumu.';
+    }).catch(() => {
+      document.getElementById('copyStatus').textContent = 'Gagal menyalin otomatis — silakan salin manual dari sini: ' + report;
+    });
+  };
+});
+</script>
+</body>
+</html>
